@@ -1,0 +1,17 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-c",
+      "-std=c99",
+      "-Wall",
+      "-Werror",
+      "-o",
+      "yafl",
+      "src/main.c"
+    ],
+    "directory": "/home/denalisun/Programming/yafl-linux",
+    "file": "/home/denalisun/Programming/yafl-linux/src/main.c",
+    "output": "/home/denalisun/Programming/yafl-linux/yafl"
+  }
+]
