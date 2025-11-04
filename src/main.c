@@ -12,10 +12,17 @@ char* convert_path_to_windows(char* path) {
     return newPath;
 }
 
-char* create_args(char *playPath, char **allTweaks, size_t allTweaksUsed, bool bIsServer) {
+char* create_args(char *playPath, char **allTweaks, size_t allTweaksUsed, bool bIsServer, char* redirectPath) {
     size_t len = strlen(playPath) + 7 + 1;
     char* r = (char*)calloc(len, sizeof(char)); 
     sprintf(r, "-p \"%s\" ", convert_path_to_windows(playPath));
+    if (redirectPath != NULL) {
+        char* redirectArg = (char*)calloc(strlen(redirectPath) + 15, sizeof(char));
+        sprintf(redirectArg, "--redirect \"%s\" ", redirectPath);
+        r = realloc(r, len + strlen(redirectArg)+1);
+        len += strlen(redirectArg)+1;
+        strcat(r, redirectArg);
+    }
     for (size_t i = 0; i < allTweaksUsed; i++) {
         size_t tweakLen = strlen(allTweaks[i]) + 6 + 1;
         char* tweakArg = (char*)calloc(tweakLen, sizeof(char));
@@ -34,6 +41,7 @@ char* create_args(char *playPath, char **allTweaks, size_t allTweaksUsed, bool b
 
 int main(int argc, char **argv) {
     char *playPath = NULL;
+    char *redirectPath = NULL;
     size_t allTweaksSize = 1;
     size_t allTweaksUsed = 0;
     char **allTweaks = (char**)calloc(allTweaksSize, sizeof(char*));
@@ -50,10 +58,13 @@ int main(int argc, char **argv) {
             allTweaksUsed++;
         } else if (strcmp(argv[i], "-s") == 0 || strcmp(argv[i], "--server") == 0) {
             bIsServer = true;
+        } else if (strcmp(argv[i], "--redirect") == 0) {
+            redirectPath = argv[i+1];
         }
     }
 
-    char* usedArgs = create_args(playPath, allTweaks, allTweaksUsed, bIsServer);
+    char* usedArgs = create_args(playPath, allTweaks, allTweaksUsed, bIsServer, redirectPath);
+    printf("%s\n", usedArgs);
     size_t len = 17 + (strlen(usedArgs) + 1);
     char* wineCmd = (char*)calloc(len, sizeof(char));
     sprintf(wineCmd, "wine ./yafl.exe %s", usedArgs);
