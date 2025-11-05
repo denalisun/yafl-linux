@@ -7,6 +7,7 @@ build:
 	make -C yafl
 	mkdir bin
 	cp yafl/yafl.exe bin/yafl.exe
+	cp yafl/redirector.dll bin/redirector.dll
 	$(CC) -o $(OUT) $(SRC) -std=c99 -Wall -Werror
 
 clean:
